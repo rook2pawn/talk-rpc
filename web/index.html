@@ -1,0 +1,137 @@
+<html>
+  <head>
+		<link rel="stylesheet" href="../css/reveal.css">
+		<link rel="stylesheet" href="../css/theme/black.css" id="theme">
+		<link rel="stylesheet" href="../lib/css/zenburn.css">
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+          <section>
+            <h1>Dnode - why?</h1>
+            <p>First let's explore the usual characters</p>
+            <h2>
+						<p class="fragment current-visible grow">Socket.IO</p>
+						<p class="fragment current-visible grow">PushR</p>
+						<p class="fragment current-visible fade-up">ZeroMQ</p>
+            </h2>
+          </section>
+          <section>
+            <section>
+              <h3>These are "Payload" Solutions</h3>
+              <p class="fragment grow">Socket.IO</p>
+              <p class="fragment grow">PushR</p>
+              <p class="fragment grow">ZeroMQ</p>
+            </section>
+            <section>
+               Basically a hosted function whose arguments can only be things that are
+               "standardly" JSON serializable
+              <p class="fragment grow">String</p>
+              <p class="fragment grow">Number</p>
+              <p class="fragment grow">Boolean</p>
+              <p class="fragment grow">Object</p>
+            </section>
+            <section>
+               Such as this "Easily Serializable but restrictive function"
+<pre><code class="hljs" data-trim contenteditable>
+  var x = function(a, b, c) {
+      // where a, b, c can be 
+      // JSON serializable
+  }
+  var ee = require('events').EventEmitter;
+  var foo = new ee;
+  foo.on('bar', x)
+  foo.emit('bar', 3, 'cat', false) 
+</code></pre>   
+            </section>
+          </section>
+        <section>
+            <section>
+            <h2>The problem?</h2>
+            Regardless if you use any of the standard JSON serializable payload event message passing systems, you have to plan ahead how you want to handle asynchronous requests in a tedious and non-iterative manner. 
+            </section>
+            <section>
+              <h3>This is Fragile and overly delicate way to develop</h3>
+              Recieving data on either side of the wire requires planning and code, planning and code that could change, and ultimately require multiple rewrites of a lot of boilerplatish code
+            <pre><code class="hljs" data-trim contenteditable>
+            emit('register', {name:'John Smith', username:'JSmith'})  
+            </code></pre>
+            <pre><code class="hljs" data-trim contenteditable>
+            .on('register-response', function(err, resp) {
+            }) 
+            </code></pre>
+            </section>
+            <section>
+            <pre><code class="hljs" data-trim contenteditable>
+            emit('register', {name:'John Smith', username:'JSmith'})  
+            </code></pre>
+            <pre><code class="hljs" data-trim contenteditable>
+            .on('register-response', function(err, resp) {
+            }) 
+            </code></pre>
+<ul>
+<li class='fragment'>do we have to use a UUID or some kind of router to correctly match up this response to some desired request?</li>
+<li class='fragment'>what if we need to do have another emit / request here? </li>
+<li class='fragment'>then we have to have another response handler?</li>
+<li class='fragment'>this goes on and on and on </li>
+</ul>
+            </section>
+        </section>
+				<section>
+          <h3>What we'd really like to do</h3>
+<pre><code class="hljs" data-trim contenteditable>
+  remote.register({name:'John Smith', username:'JSmith'}, 
+  function(err, resp) {})
+</code></pre>
+				</section>
+
+				<section>
+          <h2>Dnode</h2>
+<pre><code class="hljs" data-trim contenteditable>
+  remote.register({name:'John Smith', username:'JSmith'}, 
+  function(err, resp) {})
+</code></pre>
+Where... register is a function on the other side that looks like this :
+<pre><code class="hljs" data-trim contenteditable>
+  {
+      register : function(obj, cb) {
+          if (name.match(/^John/)) {
+              cb(new Error("We don't accept new users named John"))
+          } else {
+              cb(null, {
+                  username: obj.username
+              })
+          }
+      }
+  }
+</code></pre>
+          </section>
+					<section>
+						<h2>Fragment Styles</h2>
+						<p>There's different types of fragments, like:</p>
+						<p class="fragment grow">grow</p>
+						<p class="fragment shrink">shrink</p>
+						<p class="fragment fade-out">fade-out</p>
+						<p class="fragment fade-up">fade-up (also down, left and right!)</p>
+						<p class="fragment current-visible">current-visible</p>
+						<p>Highlight <span class="fragment highlight-red">red</span> <span class="fragment highlight-blue">blue</span> <span class="fragment highlight-green">green</span></p>
+					</section>
+
+
+			</div>
+		</div>
+		<script>
+      Reveal.initialize({
+        parallaxBackgroundImage: "/parallax.jpg",
+        parallaxBackgroundSize: "2100px 900px",
+        parallaxBackgroundHorizontal: 200,
+        parallaxBackgroundVertical: 50,
+				dependencies: [
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+      });
+		</script>
+	</body>
+</html>
