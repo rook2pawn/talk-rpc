@@ -55,22 +55,22 @@
             <section>
               <h3>This is Fragile and overly delicate way to develop</h3>
               Recieving data on either side of the wire requires planning and code, planning and code that could change, and ultimately require multiple rewrites of a lot of boilerplatish code
-            <pre><code class="hljs" data-trim contenteditable>
-            emit('register', {name:'John Smith', username:'JSmith'})  
-            </code></pre>
-            <pre><code class="hljs" data-trim contenteditable>
-            .on('register-response', function(err, resp) {
-            }) 
-            </code></pre>
+<pre><code class="hljs" data-trim contenteditable>
+emit('register', {name:'John Smith', username:'JSmith'})  
+</code></pre>
+<pre><code class="hljs" data-trim contenteditable>
+.on('register-response', function(err, resp) {
+}) 
+</code></pre>
             </section>
             <section>
-            <pre><code class="hljs" data-trim contenteditable>
-            emit('register', {name:'John Smith', username:'JSmith'})  
-            </code></pre>
-            <pre><code class="hljs" data-trim contenteditable>
-            .on('register-response', function(err, resp) {
-            }) 
-            </code></pre>
+<pre><code class="hljs" data-trim contenteditable>
+emit('register', {name:'John Smith', username:'JSmith'})  
+</code></pre>
+<pre><code class="hljs" data-trim contenteditable>
+.on('register-response', function(err, resp) {
+}) 
+</code></pre>
 <ul>
 <li class='fragment'>do we have to use a UUID or some kind of router to correctly match up this response to some desired request?</li>
 <li class='fragment'>what if we need to do have another emit / request here? </li>
@@ -87,8 +87,9 @@
 </code></pre>
 				</section>
 
-				<section>
-          <h2>Dnode</h2>
+<section>
+  <section>
+    <h2>Dnode</h2>
 <pre><code class="hljs" data-trim contenteditable>
   remote.register({name:'John Smith', username:'JSmith'}, 
   function(err, resp) {})
@@ -107,7 +108,41 @@ Where... register is a function on the other side that looks like this :
       }
   }
 </code></pre>
-          </section>
+  </section>
+  <section>
+And if we really wanted, we should be able to just write javascript, where we can pass functions in parameters, as arguments, freely.
+<p class="fragment green current-visible">When .register is called, it dynamically associates all the functions in lexical scope that are presented like myfunction </p>
+<pre><code class="hljs" data-trim contenteditable>
+var myfunction = function(fn) {
+  return fn(3);
+}; 
+
+{
+  register : function(obj, cb) {
+      if (name.match(/^John/)) {
+          cb(new Error("We don't accept new users named John"))
+      } else {
+          cb(null, {
+              username: obj.username,
+              somefunc: myfunction
+          })
+      }
+  }
+}
+</code></pre>
+  </section>
+  <section>
+So back to our caller, we can do something like this
+<pre><code class="hljs" data-trim contenteditable>
+  var squared = function(x) { return x*x };
+  remote.register({name:'John Smith', username:'JSmith'}, 
+  function(err, resp) {
+      var x = resp.somefunc(squared);
+      // x = 9
+  });
+</code></pre>
+  </section>
+</section>
 					<section>
 						<h2>Fragment Styles</h2>
 						<p>There's different types of fragments, like:</p>

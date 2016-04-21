@@ -4,11 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "browserify example/index.js -o example/bundle.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "ecstatic": "^1.4.0"
+    "browserify": "^13.0.0",
+    "dnode": "^1.2.2",
+    "ecstatic": "^1.4.0",
+    "shoe": "0.0.15"
   }
 }
