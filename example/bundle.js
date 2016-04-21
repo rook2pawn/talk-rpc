@@ -4,7 +4,9 @@ var shoe = require('shoe')
 var remote;
 
 $(window).ready(function() {
-  var d = dnode()
+  var d = dnode({alertme:function(msg) { 
+    alert("SERVER SAYS:"+ msg); }
+  })
   var stream = shoe('/stream');
   d.pipe(stream).pipe(d);
   d.on('remote', function(_r) {
@@ -18,9 +20,15 @@ $(window).ready(function() {
       var opinion = window.prompt("Please enter your opinion of this capitalization service:")
       sendOpinion(opinion) 
     }
-    remote.bar(val, function(result, sendOpinion) {
+    var squared = function(x,cb) { console.log("squared being called with x:", x);
+      cb(x*x)
+    }
+    remote.bar(val, function(result, sendOpinion, somefunc ) {
       $('div#results').html(result);
       myfunction(sendOpinion)
+      somefunc(squared, function(val) {
+        console.log("val:", val)
+      })
     })
   })
 })

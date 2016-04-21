@@ -11,10 +11,16 @@ var sock = shoe(function (stream) {
     bar:function(val,cb) {
       cb(val.toUpperCase(), function(opinion) {
           console.log("Recieved opinion for capitalizing "+ val + " :" + opinion)
+      }, function(fn,cb) {
+        fn(5,cb)
       })
     }
   })
   d.pipe(stream).pipe(d);
+  d.on('remote',function(_r) {
+    console.log("Server got client remote!", _r)
+    _r.alertme("Hi this is the server saying hello")
+  })
 })
 sock.install(server, '/stream');
 server.listen(5300)

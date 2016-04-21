@@ -113,8 +113,8 @@ Where... register is a function on the other side that looks like this :
 And if we really wanted, we should be able to just write javascript, where we can pass functions in parameters, as arguments, freely.
 <p class="fragment green current-visible">When .register is called, it dynamically associates all the functions in lexical scope that are presented like myfunction </p>
 <pre><code class="hljs" data-trim contenteditable>
-var myfunction = function(fn) {
-  return fn(3);
+var myfunction = function(fn,cb) {
+  fn(3,cb);
 }; 
 
 {
@@ -137,22 +137,51 @@ So back to our caller, we can do something like this
   var squared = function(x) { return x*x };
   remote.register({name:'John Smith', username:'JSmith'}, 
   function(err, resp) {
-      var x = resp.somefunc(squared);
-      // x = 9
+      resp.somefunc(squared,function(val) {
+        // val == 9
+      });
   });
 </code></pre>
   </section>
 </section>
-					<section>
-						<h2>Fragment Styles</h2>
-						<p>There's different types of fragments, like:</p>
-						<p class="fragment grow">grow</p>
-						<p class="fragment shrink">shrink</p>
-						<p class="fragment fade-out">fade-out</p>
-						<p class="fragment fade-up">fade-up (also down, left and right!)</p>
-						<p class="fragment current-visible">current-visible</p>
-						<p>Highlight <span class="fragment highlight-red">red</span> <span class="fragment highlight-blue">blue</span> <span class="fragment highlight-green">green</span></p>
-					</section>
+<section>
+  <h2>Convinced? Minimal Boilerplate (SERVER) </h2>
+<pre><code class="hljs" data-trim contenteditable>
+var http = require('http');
+var shoe = require('shoe')
+var dnode = require('dnode')
+var ecstatic = require('ecstatic')({root:__dirname})
+var server = http.createServer(ecstatic)
+var remote;
+var sock = shoe(function (stream) {
+  var d = dnode({})
+  d.pipe(stream).pipe(d);
+  d.on('remote', function(_r) {
+    // here you'd actually store the remote by client or some scheme
+    remote = _r;
+  })
+})
+sock.install(server, '/stream');
+server.listen(5300)
+</code></pre>
+</section>
+<section>
+  <h2>Minimal Boilerplate (CLIENT) </h2>
+<pre><code class="hljs" data-trim contenteditable>
+var dnode = require('dnode')
+var shoe = require('shoe')
+var remote;
+
+$(window).ready(function() {
+  var d = dnode({})
+  var stream = shoe('/stream');
+  d.pipe(stream).pipe(d);
+  d.on('remote', function(_r) {
+    remote = _r;
+  })
+})
+</code></pre>
+</section>
 
 
 			</div>
