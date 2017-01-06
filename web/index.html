@@ -10,6 +10,7 @@
 		<div class="reveal">
 			<div class="slides">
           <section>
+            <p>(use spacebar to navigate through all the slides)</p>
             <h1>Dnode - why?</h1>
             <p>First let's explore the usual characters</p>
             <h2>
@@ -20,6 +21,7 @@
           </section>
           <section>
             <section>
+              <p>(use spacebar to navigate through all the slides)</p>
               <h3>These are "Payload" Solutions</h3>
               <p class="fragment grow">Socket.IO</p>
               <p class="fragment grow">PushR</p>
@@ -49,6 +51,7 @@
           </section>
         <section>
             <section>
+            <p>(use spacebar to navigate through all the slides)</p>
             <h2>The problem?</h2>
             Regardless if you use any of the standard JSON serializable payload event message passing systems, you have to plan ahead how you want to handle asynchronous requests in a tedious and non-iterative manner. 
             </section>
@@ -80,6 +83,7 @@ emit('register', {name:'John Smith', username:'JSmith'})
             </section>
         </section>
 				<section>
+          <p>(use spacebar to navigate through all the slides)</p>
           <h3>What we'd really like to do</h3>
 <pre><code class="hljs" data-trim contenteditable>
   remote.register({name:'John Smith', username:'JSmith'}, 
@@ -89,6 +93,7 @@ emit('register', {name:'John Smith', username:'JSmith'})
 
 <section>
   <section>
+    <p>(use spacebar to navigate through all the slides)</p>
     <h2>Dnode</h2>
 <pre><code class="hljs" data-trim contenteditable>
   remote.register({name:'John Smith', username:'JSmith'}, 
@@ -145,6 +150,7 @@ So back to our caller, we can do something like this
   </section>
 </section>
 <section>
+  <p>(use spacebar to navigate through all the slides)</p>
   <h2>Convinced? Minimal Boilerplate (SERVER) </h2>
 <pre><code class="hljs" data-trim contenteditable>
 var http = require('http');
@@ -166,6 +172,7 @@ server.listen(5300)
 </code></pre>
 </section>
 <section>
+  <p>(use spacebar to navigate through all the slides)</p>
   <h2>Minimal Boilerplate (CLIENT) </h2>
 <pre><code class="hljs" data-trim contenteditable>
 var dnode = require('dnode')
@@ -184,6 +191,7 @@ $(window).ready(function() {
 </section>
 
 <section>
+  <p>(use spacebar to navigate through all the slides)</p>
   <h2>Actual server</h2>
 <pre><code class="hljs" data-trim contenteditable>
 var http = require('http');
@@ -216,6 +224,7 @@ server.listen(5300)
 </section>
 
 <section>
+  <p>(use spacebar to navigate through all the slides)</p>
   <h2>Actual Client</h2>
 <pre><code class="hljs" data-trim contenteditable>
 var dnode = require('dnode')
